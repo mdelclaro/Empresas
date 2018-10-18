@@ -34,7 +34,7 @@ class Auth extends Component {
     // });
     startApp();
   }
-
+  // TODO: Inserir icons nos text input
   render() {
     return (
       <View style={styles.container}>

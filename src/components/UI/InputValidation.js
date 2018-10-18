@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, TextInput, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Platform
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class InputValidation extends Component {
   textChangeHandler = (value) => {
@@ -14,14 +21,23 @@ class InputValidation extends Component {
     const { placeholder, error, ...rest } = this.props;
     return (
       <View>
-        <TextInput
-          underlineColorAndroid='transparent'          
-          onChangeText={this.textChangeHandler}
-          onBlur={this.touchHandler}
-          placeholder={placeholder}
-          {...rest}
-          style={[styles.input, this.props.style]}
-        />
+        <View style={styles.container}>
+          <Icon
+            name={Platform.OS === 'android' ? `md-${this.props.icon}` : `ios-${this.props.icon}`}
+            size={25}
+            color='#aaa'
+            style={{ padding: 10 }}
+          />
+          <TextInput
+            ref={this.props.myRef}
+            underlineColorAndroid='transparent'
+            onChangeText={this.textChangeHandler}
+            onBlur={this.touchHandler}
+            placeholder={placeholder}
+            {...rest}
+            style={[styles.input, this.props.style]}
+          />
+        </View>
         {error && <Text style={styles.errorMsg}>{error}</Text>}
       </View>
     );
@@ -29,6 +45,12 @@ class InputValidation extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    //flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   input: {
     width: '100%',
     padding: 5,
@@ -39,7 +61,8 @@ const styles = StyleSheet.create({
   errorMsg: {
     color: 'red',
     fontSize: 12,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    textAlign: 'center',
   }
 });
 

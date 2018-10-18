@@ -16,8 +16,6 @@ import * as Yup from 'yup';
 
 import ButtonWithBackground from './UI/ButtonWithBackground';
 import InputValidation from './UI/InputValidation';
-import HeadingText from './UI/HeadingText';
-import MainText from './UI/MainText';
 
 class LoginForm extends Component {
   render() {
@@ -47,10 +45,10 @@ class LoginForm extends Component {
                 style={styles.container}
                 behavior='padding'
               >
-                <Image 
-                  source={require('../assets/logo_home.png')} 
+                <Image
+                  source={require('../assets/logo_home.png')}
                   style={styles.logo}
-                  />
+                />
                 <Text style={styles.title}>
                   BEM-VINDO AO EMPRESAS
 								</Text>
@@ -62,39 +60,46 @@ class LoginForm extends Component {
                     placeholder='E-mail'
                     keyboardType='email-address'
                     autoCapitalize='none'
+                    returnKeyType='next'
                     autoCorrect={false}
                     value={values.email}
                     onChange={setFieldValue}
                     onTouch={setFieldTouched}
+                    onSubmitEditing={() => this.input.focus()}
+                    blurOnSubmit={false}
+                    icon={'mail'}
                     name='email'
                     error={touched.email && errors.email}
                     style={styles.input}
                   />
                   <InputValidation
-                    placeholder="Password"
+                    myRef={ref => (this.input = ref)}
+                    placeholder="Senha"
                     autoCapitalize='none'
+                    returnKeyType='send'
                     secureTextEntry
                     value={values.password}
                     onChange={setFieldValue}
                     onTouch={setFieldTouched}
+                    icon={'unlock'}
                     onSubmitEditing={handleSubmit}
                     name='password'
                     error={touched.password && errors.password}
                     style={styles.input}
                   />
-                
-                { // Show Activity Indicator instead of button when loading
-                  //!this.props.isLoading
-                  1 > 0
-                    ? <ButtonWithBackground
-                      color='#57bbbc'
-                      onPress={handleSubmit}
-                      isDisabled={!isValid}
-                    >
-                      ENTRAR
-                  </ButtonWithBackground>
-                    : <ActivityIndicator />
-                }
+
+                  { // Show Activity Indicator instead of button when loading
+                    //!this.props.isLoading
+                    1 > 0
+                      ? <ButtonWithBackground
+                        color='#57bbbc'
+                        onPress={handleSubmit}
+                        isDisabled={!isValid}
+                      >
+                        ENTRAR
+                        </ButtonWithBackground>
+                      : <ActivityIndicator />
+                  }
                 </View>
               </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
@@ -110,11 +115,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  logo: { 
-    height: 40, 
-    width: 160, 
-    resizeMode: 'stretch', 
-    marginBottom: 45 
+  logo: {
+    height: 40,
+    width: 160,
+    resizeMode: 'stretch',
+    marginBottom: 45
   },
   title: {
     textAlign: 'center',

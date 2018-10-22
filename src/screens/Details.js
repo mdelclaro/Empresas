@@ -10,7 +10,7 @@ class Details extends Component {
     return { 
       topBar: { 
         title: { 
-          text: 'Login' 
+          text: 'Detalhes' 
         } 
       } 
     };

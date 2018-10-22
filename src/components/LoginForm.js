@@ -9,7 +9,7 @@ import {
   Text,
   Image
 } from 'react-native';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -89,8 +89,7 @@ class LoginForm extends Component {
                   />
 
                   { // Show Activity Indicator instead of button when loading
-                    //!this.props.isLoading
-                    1 > 0
+                    !this.props.isLoading
                       ? <ButtonWithBackground
                         color='#57bbbc'
                         onPress={handleSubmit}
@@ -150,11 +149,10 @@ const styles = StyleSheet.create({
   }
 });
 
-// const mapStateToProps = state => {
-//   return {
-//     isLoading: state.ui.isLoading
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+    isLoading: state.ui.isLoading
+  };
+};
 
-//export default connect(mapStateToProps)(LoginForm);
-export default LoginForm;
+export default connect(mapStateToProps)(LoginForm);

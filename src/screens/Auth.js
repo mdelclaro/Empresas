@@ -1,40 +1,21 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { connect } from 'react-redux';
 
-import startApp from '../App';
+import { logInUser, authAutoSignIn } from '../store/actions/index';
 
 import LoginForm from '../components/LoginForm';
 
 class Auth extends Component {
-  static get options() {
-    return {
-      topBar: {
-        title: {
-          text: 'Login'
-        }
-      }
-    };
+  componentDidMount() {
+    console.log('montou');
+    this.props.onAutoSignIn();
   }
 
   submitHandler = (values) => {
-    //this.props.onTryAuth(values, this.state.authMode);
-    console.log(values);
-    // Navigation.push(this.props.componentId, {
-    //   component: {
-    //     name: 'motoapp.Screen1',
-    //     options: {
-    //       topBar: {
-    //         title: {
-    //           text: 'Screen1',
-    //         }
-    //       }
-    //     }
-    //   }
-    // });
-    startApp();
+    this.props.onTryAuth(values.email, values.password);
   }
-  // TODO: Inserir icons nos text input
+  
   render() {
     return (
       <View style={styles.container}>
@@ -54,4 +35,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Auth;
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryAuth: (email, password) =>
+      dispatch(logInUser(email, password)),
+    onAutoSignIn: () => dispatch(authAutoSignIn())
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Auth);

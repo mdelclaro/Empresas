@@ -19,24 +19,29 @@ const startApp = () => {
   ]).then(icons => {
     Navigation.setRoot({
       root: {
-        component: {
-          id: 'Home',
-          name: 'empresas.Home',
-          options: {
-            topBar: {
-              visible: true,
-              rightButtons: [
-                {
-                  id: 'searchButton',
-                  icon: icons[0]
-                }
-              ],
-              title: {
-                text: 'ioasys'
+        stack: {
+          children: [
+            {
+              component: {
+                id: 'Home',
+                name: 'empresas.Home',
+                options: {
+                  topBar: {
+                    visible: true,
+                    rightButtons: [
+                      {
+                        id: 'searchButton',
+                        icon: icons[0]
+                      }
+                    ],
+                    title: {
+                      text: 'ioasys'
+                    }
+                  }
+                },
               }
             }
-          },
-
+          ]
         }
       }
     });

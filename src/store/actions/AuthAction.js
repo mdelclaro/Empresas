@@ -57,29 +57,56 @@ export const authSetAuth = (token, client, uid) => {
   };
 };
 
-export const authAutoSignIn = () => {
+export const authGetAuth = () => {
   return (dispatch, getState) => {
-    const stateToken = getState().auth.token;
-    if (!stateToken) {
-      Promise.all([
-        AsyncStorage.getItem('ap:auth:token'),
-        AsyncStorage.getItem('ap:auth:client'),
-        AsyncStorage.getItem('ap:auth:uid')
-      ])
-        .then(data => {
-          const token = data[0];
-          const client = data[1];
-          const uid = data[2];
-          console.log('token: ' + token + '\nclient: ' + client + '\nuid: ' + uid);
-          if (!token || !client || !uid) {
-            return;
-          }
-          dispatch(authSetAuth(token, client, uid));
-          startApp();
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+    return new Promise((resolve, reject) => {
+      const stateToken = getState().auth.token;
+      if (!stateToken) {
+        Promise.all([
+          AsyncStorage.getItem('ap:auth:token'),
+          AsyncStorage.getItem('ap:auth:client'),
+          AsyncStorage.getItem('ap:auth:uid')
+        ])
+          .then(data => {
+            const token = data[0];
+            const client = data[1];
+            const uid = data[2];
+            console.log('token: ' + token + '\nclient: ' + client + '\nuid: ' + uid);
+            if (!token || !client || !uid) {
+              reject();              
+            }
+            dispatch(authSetAuth(token, client, uid));
+            const authData = {
+              token, client, uid
+            };
+            resolve(authData);
+          })
+          .catch(err => {
+            console.log(err);
+            reject();
+          });
+      } else {
+        const authData = {
+          token: stateToken,
+          client: getState().auth.client,
+          uid: getState().auth.uid
+        };
+        resolve(authData);
+      }
+      //return promise;
+    });
+  };
+};
+
+export const authAutoSignIn = () => {
+  return dispatch => {
+    dispatch(authGetAuth())
+      .then(auth => {
+        dispatch(authSetAuth(auth.token, auth.client, auth.uid));
+        startApp();
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 };

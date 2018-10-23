@@ -1,22 +1,22 @@
 import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 
 const input = props => (
-  <TextInput
-    underlineColorAndroid='transparent'
-    {...props}
-    style={[styles.input, props.style]}
-  />
+  <View style={styles.input}>
+    <TextInput
+
+      underlineColorAndroid='transparent'
+      style={{ color: 'black', borderBottomWidth: 1, borderColor: 'black' }}
+    />
+  </View>
 );
 
 const styles = StyleSheet.create({
   input: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#eee',
-    padding: 5,
-    marginTop: 8,
-    marginBottom: 8
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 0
   }
 });
 

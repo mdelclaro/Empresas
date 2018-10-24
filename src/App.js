@@ -36,7 +36,8 @@ const startApp = () => {
                       }
                     ],
                     title: {
-                      text: 'ioasys'
+                      text: 'ioasys',
+                      fontSize: 22
                     }
                   }
                 },

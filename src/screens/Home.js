@@ -113,6 +113,8 @@ class Home extends Component {
                   name: 'empresas.Input',
                   passProps: {
                     searchEmpresaHandler: this.searchEmpresaHandler,
+                    myRef: ref => (this.input = ref),
+                    blank: true
                   }
                 },
               },
@@ -127,13 +129,16 @@ class Home extends Component {
       androidIcon = 'md-search';
       iosIcon = 'ios-search';
 
+      this.input.clear();
+
       getImageSource(
         Platform.OS === 'android' ? androidIcon : iosIcon, 30, 'white')
         .then(icon => {
           Navigation.mergeOptions('Home', {
             topBar: {
               title: {
-                text: 'ioasys'
+                text: 'ioasys',
+                fontSize: 22
               },
               rightButtons: [{
                 icon,
@@ -142,6 +147,7 @@ class Home extends Component {
             }
           });
         });
+      this.props.onSearchEmpresa('');
     }
   }
 

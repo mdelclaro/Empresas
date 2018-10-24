@@ -12,7 +12,6 @@ class SearchInput extends Component {
           ref={this.props.myRef}
           placeholder='Pesquisar'
           onChangeText={this.searchEmpresaHandler}
-          //underlineColorAndroid='transparent'
           style={styles.input}
         />
     );

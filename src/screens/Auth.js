@@ -8,7 +8,6 @@ import LoginForm from '../components/LoginForm';
 
 class Auth extends Component {
   componentDidMount() {
-    console.log('montou');
     this.props.onAutoSignIn();
   }
 

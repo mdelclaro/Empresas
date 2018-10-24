@@ -1,14 +1,16 @@
 import { SET_EMPRESAS, SEARCH_EMPRESA } from './types';
 import { authGetAuth } from './AuthAction';
+import { uiStartLoading, uiStopLoading } from './UIAction';
 
 export const getEmpresas = () => {
   return dispatch => {
+    dispatch(uiStartLoading());
     dispatch(authGetAuth())
       .catch(() => {
+        dispatch(uiStopLoading());
         alert('Ocorreu algum problema. Tente novamente!');
       })
       .then(auth => {
-        console.log('then -> ' + JSON.stringify(auth));
         const token = auth.token;
         const uid = auth.uid;
         const client = auth.client;
@@ -27,10 +29,10 @@ export const getEmpresas = () => {
             if (res.ok) {
               return res.json();
             }
+            dispatch(uiStopLoading());
             throw (new Error());
           })
           .then(parsedRes => {
-            //console.log('parsedres -> \n' + JSON.stringify(parsedRes));
             const address = 'http://empresas.ioasys.com.br';
             const empresas = parsedRes.enterprises.map(empresa => {
               return {
@@ -39,12 +41,14 @@ export const getEmpresas = () => {
                 description: empresa.description,
                 country: empresa.country,
                 type: empresa.enterprise_type.enterprise_type_name,
-                image: address + empresa.photo
+                image: empresa.photo === null ? null : address + empresa.photo
               };
             });
+            dispatch(uiStopLoading());
             dispatch(setEmpresas(empresas));
           })
           .catch(err => {
+            dispatch(uiStopLoading());
             console.log(err);
             alert('Falha ao obter as empresas!');
           });

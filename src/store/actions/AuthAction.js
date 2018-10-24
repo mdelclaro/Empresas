@@ -6,7 +6,6 @@ import { uiStartLoading, uiStopLoading } from './index';
 import startApp from '../../App';
 
 export const logInUser = (email, password) => {
-  console.log('Email: ' + email + 'Password: ' + password);
   return (dispatch) => {
     dispatch(uiStartLoading());
     const url = 'http://empresas.ioasys.com.br/api/v1/users/auth/sign_in';
@@ -71,7 +70,6 @@ export const authGetAuth = () => {
             const token = data[0];
             const client = data[1];
             const uid = data[2];
-            console.log('token: ' + token + '\nclient: ' + client + '\nuid: ' + uid);
             if (!token || !client || !uid) {
               reject();              
             }

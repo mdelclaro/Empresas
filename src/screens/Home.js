@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, Keyboard, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Keyboard,
+  Platform,
+  ActivityIndicator
+} from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
 import { getImageSource } from 'react-native-vector-icons/Ionicons';
@@ -77,7 +85,6 @@ class Home extends Component {
       return item.id === id;
     });
     const { name, image, description } = empresa[0];
-    console.log(name, image, description);
     Navigation.push('stack', {
       component: {
         name: 'empresas.Details',
@@ -155,25 +162,27 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         {
-          this.state.start
-            ? <Text>
-              Clique na busca para iniciar.
+          this.props.isLoading
+            ? <ActivityIndicator />
+            : this.state.start
+              ? <Text>
+                Clique na busca para iniciar.
               </Text>
-            : <FlatList
-              data={
-                this.state.blankInput
-                  ? this.props.empresas
-                  : this.props.filteredEmpresas
-              }
-              renderItem={empresa => (
-                <Empresa
-                  empresa={empresa.item}
-                  redirect={(this.redirectHandler)}
-                />
-              )}
-              keyExtractor={empresa => empresa.id.toString()}
-              keyboardShouldPersistTaps='always'
-            />
+              : <FlatList
+                data={
+                  this.state.blankInput
+                    ? this.props.empresas
+                    : this.props.filteredEmpresas
+                }
+                renderItem={empresa => (
+                  <Empresa
+                    empresa={empresa.item}
+                    redirect={(this.redirectHandler)}
+                  />
+                )}
+                keyExtractor={empresa => empresa.id.toString()}
+                keyboardShouldPersistTaps='always'
+              />
         }
       </View>
     );
@@ -191,7 +200,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     empresas: state.empresas.empresas,
-    filteredEmpresas: state.empresas.filteredEmpresas
+    filteredEmpresas: state.empresas.filteredEmpresas,
+    isLoading: state.ui.isLoading
   };
 };
 

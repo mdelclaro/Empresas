@@ -10,7 +10,7 @@ class Details extends Component {
           text: this.props.name
         },
         visible: true,
-        backButton: { 
+        backButton: {
           color: 'white'
         },
       }
@@ -20,10 +20,14 @@ class Details extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image 
-          source={{ uri: this.props.image }}
-          style={styles.image}
-        />
+        {
+          this.props.image !== null
+            ? <Image
+              source={{ uri: this.props.image }}
+              style={styles.image}
+            />
+            : <Text style={styles.noImageText}>Sem imagem disponível...</Text>
+      }
         <Text style={styles.text}>
           {this.props.description}
         </Text>
@@ -46,11 +50,18 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   text: {
+    flex: 1,
     textAlign: 'center',
     fontSize: 16,
     margin: 3,
     marginLeft: 10,
     marginRight: 10
+  },
+  noImageText: {
+    fontSize: 14, 
+    textAlign: 'center',
+    marginTop: 30,
+    marginBottom: 30
   }
 });
 

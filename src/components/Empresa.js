@@ -18,7 +18,11 @@ class Empresa extends Component {
             <View style={styles.thumbnailContainerStyle}>
               <Image
                 style={styles.thumbnailStyle}
-                source={{ uri: this.props.empresa.image }}
+                source={
+                  this.props.empresa.image === null
+                  ? require('../assets/blank.png')
+                  : { uri: this.props.empresa.image }
+                }
               />
             </View>
             <View style={styles.headerContentStyle}>

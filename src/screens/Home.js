@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Keyboard, Platform } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { connect } from 'react-redux';
+import { getImageSource } from 'react-native-vector-icons/Ionicons';
 
-import { getEmpresas } from '../store/actions/EmpresasAction';
+import { getEmpresas, searchEmpresa } from '../store/actions/EmpresasAction';
 
-import Card from '../components/UI/Card';
-import CardSection from '../components/UI/CardSection';
+import Empresa from '../components/Empresa';
 
 class Home extends Component {
   static get options() {
@@ -26,28 +26,122 @@ class Home extends Component {
   }
 
   state = {
-    searching: false
+    start: true,
+    searched: false,
+    blankInput: true
   };
 
   componentDidMount() {
     this.props.onLoadEmpresas();
+    Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
   }
 
   navigationButtonPressed({ buttonId }) {
-    if (buttonId === 'searchButton') {
-      Navigation.mergeOptions('Home', {
-        topBar: {
-          title: {
-            component: {
-              name: 'empresas.Input',
-              alignment: 'center',
-            },
+    if (buttonId === 'rightButton') {
+      if (this.state.searched) {
+        this.setState({
+          start: false,
+          searched: false
+        });
+      } else {
+        this.setState({
+          start: false,
+          searched: true
+        });
+      }
+      this.renderIcons();
+    }
+  }
+
+  keyboardDidHide = () => {
+    this.setState({
+      searched: false
+    });
+  }
+
+  searchEmpresaHandler = text => {
+    if (text === '') {
+      this.setState({
+        blankInput: true
+      });
+    } else {
+      this.setState({
+        blankInput: false
+      });
+    }
+    this.props.onSearchEmpresa(text);
+  }
+
+  redirectHandler = (id) => {
+    const empresa = this.props.empresas.filter(item => {
+      return item.id === id;
+    });
+    const { name, image, description } = empresa[0];
+    console.log(name, image, description);
+    Navigation.push('stack', {
+      component: {
+        name: 'empresas.Details',
+        passProps: {
+          name,
+          image,
+          description
+        },
+        options: {
+          topBar: {
+            title: name
           }
         }
-      });
-      this.setState({
-        searching: true
-      });
+      }
+    });
+  }
+
+  renderIcons() {
+    let androidIcon;
+    let iosIcon;
+
+    if (this.state.searched) {
+      androidIcon = 'md-close';
+      iosIcon = 'ios-close';
+
+      getImageSource(
+        Platform.OS === 'android' ? androidIcon : iosIcon, 30, 'white')
+        .then(icon => {
+          Navigation.mergeOptions('Home', {
+            topBar: {
+              title: {
+                component: {
+                  name: 'empresas.Input',
+                  passProps: {
+                    searchEmpresaHandler: this.searchEmpresaHandler,
+                  }
+                },
+              },
+              rightButtons: [{
+                icon,
+                id: 'rightButton'
+              }]
+            }
+          });
+        });
+    } else {
+      androidIcon = 'md-search';
+      iosIcon = 'ios-search';
+
+      getImageSource(
+        Platform.OS === 'android' ? androidIcon : iosIcon, 30, 'white')
+        .then(icon => {
+          Navigation.mergeOptions('Home', {
+            topBar: {
+              title: {
+                text: 'ioasys'
+              },
+              rightButtons: [{
+                icon,
+                id: 'rightButton'
+              }]
+            }
+          });
+        });
     }
   }
 
@@ -55,27 +149,25 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         {
-          !this.state.searching
+          this.state.start
             ? <Text>
               Clique na busca para iniciar.
               </Text>
-            : <Card>
-              <CardSection>
-                <View style={styles.thumbnailContainerStyle}>
-                  <Image
-                    style={styles.thumbnailStyle}
-                    source={{ uri: require('../assets/logo_home.png') }}
-                  />
-                </View>
-                <View style={styles.headerContentStyle}>
-                  <Text style={styles.headerTextStyle}>
-                    Titulo teste
-                  </Text>
-                  <Text>Tipo teste</Text>
-                  <Text>Pais teste</Text>
-                </View>
-              </CardSection>
-            </Card>
+            : <FlatList
+              data={
+                this.state.blankInput
+                  ? this.props.empresas
+                  : this.props.filteredEmpresas
+              }
+              renderItem={empresa => (
+                <Empresa
+                  empresa={empresa.item}
+                  redirect={(this.redirectHandler)}
+                />
+              )}
+              keyExtractor={empresa => empresa.id.toString()}
+              keyboardShouldPersistTaps='always'
+            />
         }
       </View>
     );
@@ -88,40 +180,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  headerContentStyle: {
-    flexDirection: 'column',
-    justifyContent: 'space-around'
-  },
-  headerTextStyle: {
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  thumbnailStyle: {
-    height: 50,
-    width: 50
-  },
-  thumbnailContainerStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10
-  },
-  imageStyle: {
-    height: 300,
-    flex: 1, // flex: 1 and width: null to get the full width of device
-    width: null
-  }
 });
 
 const mapStateToProps = state => {
   return {
-    empresas: state.empresas.empresas
+    empresas: state.empresas.empresas,
+    filteredEmpresas: state.empresas.filteredEmpresas
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadEmpresas: () => dispatch(getEmpresas())
+    onLoadEmpresas: () => dispatch(getEmpresas()),
+    onSearchEmpresa: text => dispatch(searchEmpresa(text))
   };
 };
 

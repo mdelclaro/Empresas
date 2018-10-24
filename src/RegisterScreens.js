@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import Auth from './screens/Auth';
 import Home from './screens/Home';
 import Details from './screens/Details';
-import Input from './components/UI/Input';
+import Input from './components/UI/SearchInput';
 
 import createStore from './store/configureStore';
 

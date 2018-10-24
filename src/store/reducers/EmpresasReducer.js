@@ -1,7 +1,8 @@
-import { SET_EMPRESAS } from '../actions/types';
+import { SET_EMPRESAS, SEARCH_EMPRESA } from '../actions/types';
 
 const INITIAL_STATE = {
-  empresas: []
+  empresas: [],
+  filteredEmpresas: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -11,6 +12,16 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         empresas: action.payload
       };
+    case SEARCH_EMPRESA:
+    return {
+      ...state,
+      filteredEmpresas: state.empresas.filter(item => {
+        const itemData = `${item.name.toUpperCase()}`;
+        const textData = action.payload.toUpperCase();
+
+        return itemData.indexOf(textData) > -1;
+      })
+    };
     default:
       return state;
   }

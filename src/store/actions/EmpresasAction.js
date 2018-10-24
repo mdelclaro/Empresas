@@ -1,4 +1,4 @@
-import { SET_EMPRESAS } from './types';
+import { SET_EMPRESAS, SEARCH_EMPRESA } from './types';
 import { authGetAuth } from './AuthAction';
 
 export const getEmpresas = () => {
@@ -13,6 +13,7 @@ export const getEmpresas = () => {
         const uid = auth.uid;
         const client = auth.client;
         const url = 'http://empresas.ioasys.com.br/api/v1/enterprises';
+
         fetch(url, {
           method: 'GET',
           headers: {
@@ -29,14 +30,16 @@ export const getEmpresas = () => {
             throw (new Error());
           })
           .then(parsedRes => {
-            console.log('parsedres -> \n' + JSON.stringify(parsedRes));
+            //console.log('parsedres -> \n' + JSON.stringify(parsedRes));
+            const address = 'http://empresas.ioasys.com.br';
             const empresas = parsedRes.enterprises.map(empresa => {
               return {
                 id: empresa.id,
                 name: empresa.enterprise_name,
                 description: empresa.description,
                 country: empresa.country,
-                type: empresa.enterprise_type.enterprise_type_name
+                type: empresa.enterprise_type.enterprise_type_name,
+                image: address + empresa.photo
               };
             });
             dispatch(setEmpresas(empresas));
@@ -53,5 +56,12 @@ export const setEmpresas = empresas => {
   return {
     type: SET_EMPRESAS,
     payload: empresas
+  };
+};
+
+export const searchEmpresa = text => {
+  return {
+    type: SEARCH_EMPRESA,
+    payload: text
   };
 };

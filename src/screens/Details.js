@@ -1,49 +1,57 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
-
-import startApp from '../App';
-
-import LoginForm from '../components/LoginForm';
+import { View, Image, Text, StyleSheet } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 
 class Details extends Component {
-  static get options() {
-    return { 
-      topBar: { 
-        title: { 
-          text: 'Detalhes' 
-        } 
-      } 
-    };
-  }
-
-  submitHandler = (values) => {
-    //this.props.onTryAuth(values, this.state.authMode);
-    console.log(values);
-    // Navigation.push(this.props.componentId, {
-    //   component: {
-    //     name: 'motoapp.Screen1',
-    //     options: {
-    //       topBar: {
-    //         title: {
-    //           text: 'Screen1',
-    //         }
-    //       }
-    //     }
-    //   }
-    // });
-    startApp();
+  componentDidMount() {
+    Navigation.mergeOptions(this.props.componentId, {
+      topBar: {
+        title: {
+          text: this.props.name
+        },
+        visible: true,
+        backButton: { 
+          color: 'white'
+        },
+      }
+    });
   }
 
   render() {
     return (
-      <View>
-        <LoginForm
-          onSwitchAuthMode={this.switchAuthModeHandler}
-          submitHandler={this.submitHandler}
+      <View style={styles.container}>
+        <Image 
+          source={{ uri: this.props.image }}
+          style={styles.image}
         />
+        <Text style={styles.text}>
+          {this.props.description}
+        </Text>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'center',
+    margin: 3,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 16,
+    margin: 3,
+    marginLeft: 10,
+    marginRight: 10
+  }
+});
 
 export default Details;

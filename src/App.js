@@ -20,6 +20,7 @@ const startApp = () => {
     Navigation.setRoot({
       root: {
         stack: {
+          id: 'stack',
           children: [
             {
               component: {
@@ -30,7 +31,7 @@ const startApp = () => {
                     visible: true,
                     rightButtons: [
                       {
-                        id: 'searchButton',
+                        id: 'rightButton',
                         icon: icons[0]
                       }
                     ],

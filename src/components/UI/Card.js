@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 
 const Card = (props) => (
     <View style={styles.containerStyle}>
@@ -9,6 +9,7 @@ const Card = (props) => (
 
 const styles = {
   containerStyle: {
+    width: Dimensions.get('window').width * 0.95,
     borderWidth: 1,
     borderRadius: 2,
     borderColor: '#ddd',

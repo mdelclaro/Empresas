@@ -1,3 +1,3 @@
 export { logInUser, authAutoSignIn } from './AuthAction';
 export { uiStartLoading, uiStopLoading } from './UIAction';
-export { getEmpresas } from './EmpresasAction';
+export { getEmpresas, searchEmpresa } from './EmpresasAction';
